@@ -93,6 +93,11 @@
     [self playerTimeChanged];
 }
 
+- (BOOL)isPlaying
+{
+    return !(self.player.rate == 0);
+}
+
 - (NSString *)timecodeForTimeInterval:(NSTimeInterval)time
 {
     NSInteger seconds;
@@ -165,6 +170,11 @@
     
     gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSliderTap:)];
     [self.slider addGestureRecognizer:gesture];
+    
+    [self.slider addTarget:self action:@selector(sliderValueChanged:forEvent:) forControlEvents:UIControlEventValueChanged];
+    [self.slider addTarget:self action:@selector(sliderDidEndDragging:forEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [self.slider addTarget:self action:@selector(sliderDidCancelDragging:forEvent:) forControlEvents:UIControlEventTouchUpOutside];
+    [self.slider addTarget:self action:@selector(sliderDidCancelDragging:forEvent:) forControlEvents:UIControlEventTouchCancel];
 }
 
 - (void)removeTimeObserver
@@ -277,6 +287,24 @@
     }
     
     [self updatePlayer:(touch.phase == UITouchPhaseEnded)];
+}
+
+- (IBAction)sliderDidEndDragging:(id)sender forEvent:(UIEvent *)event
+{
+    if(self.playAfterDrag)
+    {
+        self.playAfterDrag = NO;
+        [self.player play];
+    }
+}
+
+- (IBAction)sliderDidCancelDragging:(id)sender forEvent:(UIEvent *)event
+{
+    if(self.playAfterDrag)
+    {
+        self.playAfterDrag = NO;
+        [self.player play];
+    }
 }
 
 - (IBAction)playPause:(id)sender

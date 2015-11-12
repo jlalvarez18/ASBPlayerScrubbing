@@ -35,6 +35,12 @@
 // Indicates whether a minus sgn is shown on remaining time label. Defaults to YES.
 @property (nonatomic, assign) BOOL showMinusSignOnRemainingTime;
 
+@property (nonatomic, readonly) BOOL isPlaying;
+
+- (IBAction)playPause:(id)sender;
+- (IBAction)play:(id)sender;
+- (IBAction)pause:(id)sender;
+
 // Returns the formatted representation of the specified time. If showTimeFrames is YES, the representation respects the player frame rate.
 - (NSString *)timecodeForTimeInterval:(NSTimeInterval)time;
 
